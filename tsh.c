@@ -1,7 +1,8 @@
 /* 
  * tsh - A tiny shell program with job control
  * 
- * <Put your name and ID here>
+ * Sargis Abrahamyan
+ * 861238563
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -168,12 +169,21 @@ void eval(char *cmdline)
     char *argv[MAXARGS];
     int bg = parseline(cmdline, argv);
     pid_t pid;
+    sigset_t mask;
 
     int isBuiltIn = builtin_cmd(argv);
 
     if(!isBuiltIn) {
 
+        sigemptyset(&mask);
+        sigaddset(&mask, SIGCHLD);
+        sigprocmask(SIG_BLOCK, &mask, NULL);
+
         if((pid = fork()) == 0) {
+
+            setpgid(0, 0);
+            sigprocmask(SIG_UNBLOCK, &mask, NULL);
+
             if(execve(argv[0], argv, environ) < 0) {
                 printf("%s: Command not found.\n", argv[0]);
                 exit(0);
@@ -183,6 +193,7 @@ void eval(char *cmdline)
         if(!bg) {
 
             addjob(jobs, pid, FG, cmdline);
+            sigprocmask(SIG_UNBLOCK, &mask, NULL);
             waitfg(pid);
 
         } else {
