@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/cygdrive/c/Users/Sargis/CLionProjects/untitled2/tsh.c
+stdio.h
+-
+stdlib.h
+-
+unistd.h
+-
+string.h
+-
+ctype.h
+-
+signal.h
+-
+sys/types.h
+-
+sys/wait.h
+-
+errno.h
+-
+
